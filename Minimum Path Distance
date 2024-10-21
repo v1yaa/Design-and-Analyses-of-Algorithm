@@ -1,0 +1,23 @@
+def tsp(dist, mask, pos, dp, n):
+    if mask == (1 << n) - 1:
+        return dist[pos][0] 
+    if dp[pos][mask] != float('inf'):
+        return dp[pos][mask]
+    for city in range(n):
+        if (mask & (1 << city)) == 0: 
+            new_cost = dist[pos][city] + tsp(dist, mask | (1 << city), city, dp, n)
+            dp[pos][mask] = min(dp[pos][mask], new_cost)
+    return dp[pos][mask]
+def find_min_path(dist):
+    n = len(dist)
+    dp = [[float('inf')] * (1 << n) for _ in range(n)]
+    min_cost = tsp(dist, 1, 0, dp, n)
+    return min_cost
+dist = [
+    [0, 10, 15, 20],
+    [10, 0, 35, 25],
+    [15, 35, 0, 30],
+    [20, 25, 30, 0]
+]
+min_cost = find_min_path(dist)
+print(f"Minimum path distance: {min_cost}")
