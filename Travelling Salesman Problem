@@ -1,0 +1,32 @@
+from itertools import permutations
+def calculate_total_distance(path, dist):
+    total_distance = 0
+    for i in range(len(path) - 1):
+        total_distance += dist[path[i]][path[i + 1]]
+    total_distance += dist[path[-1]][path[0]] 
+    return total_distance
+def tsp_brute_force(dist):
+    n = len(dist)
+    cities = list(range(n)) 
+    all_permutations = permutations(cities[1:])
+    min_distance = float('inf')
+    best_path = None
+    for perm in all_permutations:
+        path = [0] + list(perm)  
+        current_distance = calculate_total_distance(path, dist)
+        if current_distance < min_distance:
+            min_distance = current_distance
+            best_path = path
+    city_names = ['A', 'B', 'C', 'D', 'E']
+    best_path_names = [city_names[city] for city in best_path]
+    return min_distance, best_path_names
+dist = [
+    [0, 10, 15, 20, 25], 
+    [10, 0, 35, 25, 30],  
+    [15, 35, 0, 30, 20], 
+    [20, 25, 30, 0, 15], 
+    [25, 30, 20, 15, 0]  
+]
+min_cost, best_path = tsp_brute_force(dist)
+print(f"Minimum path distance: {min_cost}")
+print(f"Shortest path: {' -> '.join(best_path)}")
