@@ -1,0 +1,53 @@
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    def find(self, u):
+        if self.parent[u] != u:
+            self.parent[u] = self.find(self.parent[u])
+        return self.parent[u]
+    def union(self, u, v):
+        root_u = self.find(u)
+        root_v = self.find(v)
+        if root_u != root_v:
+            if self.rank[root_u] > self.rank[root_v]:
+                self.parent[root_v] = root_u
+            elif self.rank[root_u] < self.rank[root_v]:
+                self.parent[root_u] = root_v
+            else:
+                self.parent[root_v] = root_u
+                self.rank[root_u] += 1
+            return True
+        return False
+def find_mst(n, edges):
+    edges.sort(key=lambda x: x[2]) 
+    uf = UnionFind(n)
+    mst = []
+    total_weight = 0
+    for u, v, weight in edges:
+        if uf.union(u, v):
+            mst.append((u, v, weight))
+            total_weight += weight
+    return mst, total_weight
+def is_unique_mst(n, edges, given_mst):
+    given_weight = sum(weight for u, v, weight in given_mst)
+    mst, total_weight = find_mst(n, edges)
+    if given_weight != total_weight:
+        return False, None 
+    uf = UnionFind(n)
+    alternative_edges = []
+    edge_used = set(given_mst)
+    for u, v, weight in sorted(edges, key=lambda x: x[2]):
+        if uf.union(u, v): 
+            if (u, v, weight) not in edge_used:  
+                alternative_edges.append((u, v, weight))
+    if alternative_edges:
+        return False, alternative_edges 
+    return True, None 
+n = 4
+edges = [(0, 1, 10), (0, 2, 6), (0, 3, 5), (1, 3, 15), (2, 3, 4)]
+given_mst = [(2, 3, 4), (0, 3, 5), (0, 1, 10)]
+is_unique, alternative_mst = is_unique_mst(n, edges, given_mst)
+print("Is the given MST unique?", is_unique) 
+if alternative_mst:
+    print("Another possible MST:", alternative_mst)
