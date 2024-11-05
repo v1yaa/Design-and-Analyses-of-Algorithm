@@ -1,0 +1,28 @@
+def canDistribute(jobs, k, max_time):
+    workers = [0] * k
+    return backtrack(jobs, 0, workers, max_time)
+def backtrack(jobs, index, workers, max_time):
+    if index == len(jobs):
+        return True
+    for i in range(len(workers)):
+        if workers[i] + jobs[index] <= max_time:
+            workers[i] += jobs[index]
+            if backtrack(jobs, index + 1, workers, max_time):
+                return True
+            workers[i] -= jobs[index]
+        if workers[i] == 0:
+            break
+    return False
+def minimumMaximumTime(jobs, k):
+    left, right = max(jobs), sum(jobs)
+    while left < right:
+        mid = (left + right) // 2
+        if canDistribute(jobs, k, mid):
+            right = mid
+        else:
+            left = mid + 1
+    return left
+jobs = [3, 2, 3]
+k = 3
+result = minimumMaximumTime(jobs, k)
+print(result) 
