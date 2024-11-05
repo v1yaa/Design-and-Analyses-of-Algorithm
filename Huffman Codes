@@ -1,0 +1,35 @@
+import heapq
+from collections import defaultdict
+class Node:
+    def __init__(self, char, freq):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+    def __lt__(self, other):
+        return self.freq < other.freq
+def generate_huffman_codes(characters, frequencies):
+    priority_queue = [Node(char, freq) for char, freq in zip(characters, frequencies)]
+    heapq.heapify(priority_queue)
+    while len(priority_queue) > 1:
+        left = heapq.heappop(priority_queue)
+        right = heapq.heappop(priority_queue)
+        merged = Node(None, left.freq + right.freq)
+        merged.left = left
+        merged.right = right
+        heapq.heappush(priority_queue, merged)
+    root = priority_queue[0]
+    huffman_codes = {}
+    generate_codes(root, "", huffman_codes)
+    return sorted(huffman_codes.items())
+def generate_codes(node, code, huffman_codes):
+    if node is not None:
+        if node.char is not None:
+            huffman_codes[node.char] = code
+        generate_codes(node.left, code + "0", huffman_codes)
+        generate_codes(node.right, code + "1", huffman_codes)
+n = 4
+characters = ['a', 'b', 'c', 'd']
+frequencies = [5, 9, 12, 13]
+result = generate_huffman_codes(characters, frequencies)
+print(result) 
