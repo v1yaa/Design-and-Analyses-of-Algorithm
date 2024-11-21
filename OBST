@@ -1,10 +1,8 @@
 def optimal_bst_cost(freq):
     n = len(freq)
     cost = [[0] * n for _ in range(n)]
-    
     for i in range(n):
         cost[i][i] = freq[i]
-
     for L in range(2, n + 1):
         for i in range(n - L + 1):
             j = i + L - 1
