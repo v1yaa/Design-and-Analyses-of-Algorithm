@@ -1,0 +1,31 @@
+def is_hamiltonian_cycle(graph, n):
+    adj_list = [[] for _ in range(n)]
+    for u, v in graph:
+        adj_list[u].append(v)
+        adj_list[v].append(u)
+    def can_add_to_path(v, pos, path):
+        if v in path:
+            return False
+        if adj_list[path[pos-1]] and v not in adj_list[path[pos-1]]:
+            return False
+        return True
+    def hamiltonian_util(path, pos):
+        if pos == n:
+            if path[pos-1] in adj_list[path[0]]:
+                return True
+            return False
+        for v in range(1, n):
+            if can_add_to_path(v, pos, path):
+                path[pos] = v
+                if hamiltonian_util(path, pos + 1):
+                    return True
+                path[pos] = -1  
+        return False
+    path = [-1] * n
+    path[0] = 0
+    if hamiltonian_util(path, 1):
+        return True
+    return False
+edges = [(0, 1), (1, 2), (2, 3), (3, 0), (0, 2), (2, 4), (4, 0)]
+n = 5
+print(is_hamiltonian_cycle(edges, n)) 
