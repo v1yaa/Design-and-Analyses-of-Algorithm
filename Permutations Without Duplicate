@@ -1,0 +1,23 @@
+def permuteUnique(nums):
+    def backtrack(start):
+        # If we have a complete permutation, add it to the result
+        if start == len(nums):
+            result.append(list(nums))
+            return
+        for i in range(start, len(nums)):
+            # Skip duplicates: if current element is the same as the previous one,
+            # and the previous element has not been used in the current permutation
+            if i > start and nums[i] == nums[i - 1]:
+                continue
+            # Swap the current element with the starting element
+            nums[start], nums[i] = nums[i], nums[start]
+            backtrack(start + 1)
+            # Backtrack (undo the swap)
+            nums[start], nums[i] = nums[i], nums[start]
+    nums.sort()  # Sort to help with skipping duplicates
+    result = []
+    backtrack(0)
+    return result
+# Example usage
+nums = [1, 1, 2]
+print("Output:", permuteUnique(nums))
