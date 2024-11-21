@@ -1,0 +1,18 @@
+def subsets_with_element(nums, x):
+    result = []
+    def backtrack(start, current_subset):
+        if x in current_subset:
+            result.append(current_subset[:]) 
+        for i in range(start, len(nums)):
+            current_subset.append(nums[i])
+            backtrack(i + 1, current_subset) 
+            current_subset.pop() 
+    nums.sort()
+    backtrack(0, [])
+    return result
+nums = [2, 3, 4, 5]
+x = 3
+subsets_with_3 = subsets_with_element(nums, x)
+print("Subsets containing 3:", subsets_with_3)
+nums2 = [1, 2, 3]
+print("All subsets of [1, 2, 3]:", subsets_with_element(nums2, 3))
