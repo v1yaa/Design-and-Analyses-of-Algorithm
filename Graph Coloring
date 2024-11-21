@@ -1,0 +1,28 @@
+def graph_coloring(adj_list, n):
+    color = [-1] * n
+    def is_safe(v, c, color):
+        for neighbor in adj_list[v]:
+            if color[neighbor] == c:
+                return False
+        return True
+    def graph_coloring_util(v, color, n):
+        if v == n:
+            return True
+        for c in range(1, n + 1):
+            if is_safe(v, c, color):
+                color[v] = c
+                if graph_coloring_util(v + 1, color, n):
+                    return True
+                color[v] = -1 
+        return False
+    if not graph_coloring_util(0, color, n):
+        return "No solution"
+    return color
+edges = [(0, 1), (1, 2), (2, 3), (3, 0), (0, 2)]
+n = 4  
+adj_list = [[] for _ in range(n)]
+for edge in edges:
+    adj_list[edge[0]].append(edge[1])
+    adj_list[edge[1]].append(edge[0])
+result = graph_coloring(adj_list, n)
+print("Coloring:", result)
